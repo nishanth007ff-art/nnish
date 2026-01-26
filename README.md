@@ -1,18 +1,18 @@
 # Streamlit Teaching Material
 
 ## Overview
-This repository contains Streamlit teaching materials designed to help juniors learn how to build interactive web applications using Python. The materials include a teaching example (`app.py`) and a hands-on assignment (`Portfolio.py`).
+This repository contains Streamlit teaching materials designed to help juniors learn how to build interactive web applications using Python. The materials include a teaching example (`app.py`) and a hands-on assignment (`StudentManagement.py`).
 
 ## Files in this Repository
 
-### 📚 app.py - Teaching Material
+###  app.py - Teaching Material
 This file demonstrates core Streamlit concepts through four progressive sections:
 - **Section 1: Basic Input** - Text and number input with button submission
 - **Section 2: Static Table** - Displaying hardcoded data in table format
 - **Section 3: Session State** - Persistent data storage across reruns
 - **Section 4: Bar Chart** - Data visualization with charts
 
-### 📝 Portfolio.py - Student Assignment
+###  Portfolio.py - Student Assignment
 A simplified student management system where learners apply concepts from `app.py`:
 - Add students with name, roll number, and department
 - View all students in a table
