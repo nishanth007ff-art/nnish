@@ -26,8 +26,13 @@ dept = st.text_input("Department (e.g., CSE)")
 
 if st.button("Add"):
     if name and roll and dept:
-        students.append({"Name": name, "Roll": roll, "Department": dept})
-        st.success("Student added")
+        for s in students:
+            if s["Roll"] == roll:
+                st.warning("Roll number already exists! Try adding another one...")
+                break
+        else:
+            students.append({"Name": name, "Roll": roll, "Department": dept})
+            st.success("Student added")
     else:
         st.warning("Please fill name, roll, and department")
 
