@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # ---------------------------
-# Page config
+# Page Config
 # ---------------------------
 st.set_page_config(
     page_title="Student Manager",
@@ -11,13 +11,13 @@ st.set_page_config(
 )
 
 # ---------------------------
-# Login credentials (demo)
+# Demo Login Credentials
 # ---------------------------
-VALID_USERNAME = "admin"
-VALID_PASSWORD = "1234"
+USERNAME = "admin"
+PASSWORD = "1234"
 
 # ---------------------------
-# Session state init
+# Session State
 # ---------------------------
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
@@ -29,27 +29,27 @@ if "students" not in st.session_state:
 # Login Page
 # ---------------------------
 def login_page():
-    st.title("🔐 Login")
-    st.caption("Student Management System")
+    st.title("🎓 Student Management System")
+    st.subheader("🔐 Login")
 
     with st.form("login_form"):
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        login_btn = st.form_submit_button("Login")
+        user = st.text_input("Username")
+        pwd = st.text_input("Password", type="password")
+        login = st.form_submit_button("Login")
 
-        if login_btn:
-            if username == VALID_USERNAME and password == VALID_PASSWORD:
+        if login:
+            if user == USERNAME and pwd == PASSWORD:
                 st.session_state.logged_in = True
                 st.success("Login successful")
                 st.rerun()
             else:
-                st.error("Invalid username or password")
+                st.error("Invalid credentials")
 
 # ---------------------------
 # Main App
 # ---------------------------
 def main_app():
-    st.title("🎓 Student Management System")
+    st.title("🎓 Student Management Dashboard")
 
     # Logout
     if st.sidebar.button("🚪 Logout"):
@@ -58,61 +58,75 @@ def main_app():
 
     students = st.session_state.students
 
-    # -----------------------
-    # Add Student (Sidebar)
-    # -----------------------
+    # ---------------------------
+    # Sidebar - Add Student
+    # ---------------------------
     st.sidebar.header("➕ Add Student")
 
-    with st.sidebar.form("add_form"):
+    with st.sidebar.form("add_student"):
         name = st.text_input("Student Name")
         roll = st.text_input("Roll Number")
         dept = st.text_input("Department")
-        add_btn = st.form_submit_button("Add")
 
-        if add_btn:
+        st.markdown("**Enter Marks**")
+        m1 = st.number_input("Maths", 0, 100, 0)
+        m2 = st.number_input("Physics", 0, 100, 0)
+        m3 = st.number_input("Computer", 0, 100, 0)
+
+        add = st.form_submit_button("Add Student")
+
+        if add:
             if name and roll and dept:
+                total = m1 + m2 + m3
+                avg = round(total / 3, 2)
+
                 students.append({
                     "Name": name,
                     "Roll": roll,
-                    "Department": dept
+                    "Department": dept,
+                    "Maths": m1,
+                    "Physics": m2,
+                    "Computer": m3,
+                    "Total": total,
+                    "Average": avg
                 })
-                st.sidebar.success("Student added")
+
+                st.sidebar.success("Student added successfully")
             else:
-                st.sidebar.warning("Fill all fields")
+                st.sidebar.warning("Please fill all details")
 
-    # -----------------------
-    # Search Section
-    # -----------------------
+    # ---------------------------
+    # Search Students
+    # ---------------------------
     st.subheader("🔍 Search Students")
-
-    search_term = st.text_input("Search by Name / Roll / Department")
+    search = st.text_input("Search by Name / Roll / Department")
 
     if students:
         df = pd.DataFrame(students)
 
-        if search_term:
+        if search:
             df = df[
-                df["Name"].str.contains(search_term, case=False) |
-                df["Roll"].str.contains(search_term, case=False) |
-                df["Department"].str.contains(search_term, case=False)
+                df["Name"].str.contains(search, case=False) |
+                df["Roll"].str.contains(search, case=False) |
+                df["Department"].str.contains(search, case=False)
             ]
 
         st.dataframe(df, use_container_width=True)
     else:
-        st.info("No students added yet.")
+        st.info("No students added yet")
 
-    # -----------------------
+    # ---------------------------
     # Delete Student
-    # -----------------------
+    # ---------------------------
     st.subheader("🗑️ Delete Student")
 
     if students:
-        rolls = [s["Roll"] for s in students]
-        roll_to_delete = st.selectbox("Select Roll", rolls)
+        roll_list = [s["Roll"] for s in students]
+        roll_del = st.selectbox("Select Roll Number", roll_list)
 
-        if st.button("Delete Student"):
+        if st.button("Delete"):
             st.session_state.students = [
-                s for s in students if s["Roll"] != roll_to_delete
+                s for s in students if s["Roll"] != roll_del
             ]
             st.success("Student deleted")
             st.rerun()
